@@ -34,14 +34,7 @@
                 </div>
             </div>
         </div>
-    </div>
- 
-    <div class="small-container">
-        <br>
-        <br>
-        <h2 class="title">Produkte të reja</h2>
-        </div>
-    </div>
+
     <div class="offer">
         <div class="container">
             <div class="row">
