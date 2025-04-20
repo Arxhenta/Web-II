@@ -1,5 +1,67 @@
 <?php 
-include('config.php');
+
+class User {
+    private $email;
+    private $password;
+    
+    public function __construct($email, $password) {
+        $this->email = $email;
+        $this->password = $password;
+    }
+    
+   
+    public function getEmail() {
+        return $this->email;
+    }
+    
+    public function getPassword() {
+        return $this->password;
+    }
+}
+
+
+class AuthSystem {
+    private $users = [];
+    
+    public function __construct() {
+      
+        $this->users = [
+            new User('user1@example.com', 'password123'),
+            new User('user2@example.com', 'securepass')
+        ];
+    }
+    
+    public function validateLogin($email, $password) {
+       
+        if (!preg_match('/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/', $email)) {
+            return false;
+        }
+       
+        foreach ($this->users as $user) {
+            if ($user->getEmail() === $email && $user->getPassword() === $password) {
+                return true;
+            }
+        }
+        return false;
+    }
+}
+
+$auth = new AuthSystem();
+$login_error = '';
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $email = $_POST['email'] ?? '';
+    $password = $_POST['password'] ?? '';
+    
+    if ($auth->validateLogin($email, $password)) {
+        $_SESSION['user_email'] = $email;
+        header('Location: index.php');
+        exit();
+    } else {
+        $login_error = 'Email ose fjalëkalim i gabuar';
+    }
+}
+
 include('includes/header.php'); 
 ?>
         <div class="account-page">
@@ -12,10 +74,16 @@ include('includes/header.php');
                         <div class="login-container">
                             <div class="login-box">
                                 <h2>Kyçu</h2>
-                                <form action="process_login.php" method="POST">
+                                <?php if ($login_error): ?>
+                                    <div class="error-message" style="color: red; margin-bottom: 15px;">
+                                        <?php echo htmlspecialchars($login_error); ?>
+                                    </div>
+                                <?php endif; ?>
+                                <form action="login.php" method="POST">
                                     <div class="input-group">
                                         <label for="email">Shkruaje email-in:</label>
-                                        <input type="email" id="email" name="email" required>
+                                        <input type="email" id="email" name="email" required
+                                            value="<?php echo htmlspecialchars($_POST['email'] ?? ''); ?>">
                                     </div>
                                     <div class="input-group">
                                         <label for="password">Shkruaje fjalëkalimin:</label>
