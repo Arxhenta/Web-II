@@ -5,7 +5,7 @@ ini_set('display_errors', 1);
 
 try {
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-        // Validate required fields
+
         $required = ['product_id', 'product_name', 'product_price', 'product_image', 'quantity'];
         foreach ($required as $field) {
             if (!isset($_POST[$field]) || empty($_POST[$field])) {
@@ -13,12 +13,11 @@ try {
             }
         }
 
-        // Initialize cart if not already set
+
         if (!isset($_SESSION['cart'])) {
             $_SESSION['cart'] = [];
         }
 
-        // Sanitize and validate input
         $item = [
             'id' => filter_var($_POST['product_id'], FILTER_VALIDATE_INT),
             'name' => filter_var($_POST['product_name'], FILTER_SANITIZE_STRING),
@@ -27,12 +26,10 @@ try {
             'quantity' => filter_var($_POST['quantity'], FILTER_VALIDATE_INT)
         ];
 
-        // Validate filtered data
         if (!$item['id'] || !$item['price'] || !$item['quantity']) {
             throw new Exception("Invalid data format");
         }
 
-        // Check if the item already exists in the cart
         $found = false;
         foreach ($_SESSION['cart'] as &$cartItem) {
             if ($cartItem['id'] === $item['id']) {
@@ -42,12 +39,10 @@ try {
             }
         }
 
-        // Add new item if not found
         if (!$found) {
             $_SESSION['cart'][] = $item;
         }
 
-        // Redirect to the cart page
         header('Location: cart.php');
         exit;
     }
