@@ -688,4 +688,18 @@ a {
     color: #666;
     text-align: center;
     line-height: 0.2;
+}.session-debug {
+    z-index: 1000;
+    max-width: 300px;
+    overflow: auto;
+    font-family: monospace;
 }
+
+.session-debug h4 {
+    margin: 0 0 5px 0;
+    color: #A7A1FA;
+}
+
+
+
+
