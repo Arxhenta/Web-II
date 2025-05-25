@@ -1,53 +1,39 @@
 <?php
 session_start();
-error_reporting(E_ALL);
-ini_set('display_errors', 1);
 
-try {
-    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+    $product_id = $_POST['product_id'];
+    $product_name = $_POST['product_name'];
+    $product_price = $_POST['product_price'];
+    $product_image = $_POST['product_image'];
+    $quantity = $_POST['quantity'];
 
-        $required = ['product_id', 'product_name', 'product_price', 'product_image', 'quantity'];
-        foreach ($required as $field) {
-            if (!isset($_POST[$field]) || empty($_POST[$field])) {
-                throw new Exception("Missing or invalid field: $field");
-            }
-        }
+    $cart_item = [
+        'id' => $product_id,
+        'name' => $product_name,
+        'price' => $product_price,
+        'image' => $product_image,
+        'quantity' => $quantity
+    ];
 
-
-        if (!isset($_SESSION['cart'])) {
-            $_SESSION['cart'] = [];
-        }
-
-        $item = [
-            'id' => filter_var($_POST['product_id'], FILTER_VALIDATE_INT),
-            'name' => filter_var($_POST['product_name'], FILTER_SANITIZE_STRING),
-            'price' => filter_var($_POST['product_price'], FILTER_VALIDATE_FLOAT),
-            'image' => filter_var($_POST['product_image'], FILTER_SANITIZE_STRING),
-            'quantity' => filter_var($_POST['quantity'], FILTER_VALIDATE_INT)
-        ];
-
-        if (!$item['id'] || !$item['price'] || !$item['quantity']) {
-            throw new Exception("Invalid data format");
-        }
-
-        $found = false;
-        foreach ($_SESSION['cart'] as &$cartItem) {
-            if ($cartItem['id'] === $item['id']) {
-                $cartItem['quantity'] += $item['quantity'];
-                $found = true;
-                break;
-            }
-        }
-
-        if (!$found) {
-            $_SESSION['cart'][] = $item;
-        }
-
-        header('Location: cart.php');
-        exit;
+    if (!isset($_SESSION['cart'])) {
+        $_SESSION['cart'] = [];
     }
-} catch (Exception $e) {
-    error_log($e->getMessage());
-    header('Location: product_details.php?id=' . ($_POST['product_id'] ?? 0) . '&error=' . urlencode($e->getMessage()));
+
+    //Shiko nese produkti eshte ne shporte
+    $found = false;
+    foreach ($_SESSION['cart'] as &$item) {
+        if ($item['id'] == $product_id) {
+            $item['quantity'] += $quantity;
+            $found = true;
+            break;
+        }
+    }
+
+    if (!$found) {
+        $_SESSION['cart'][] = $cart_item;
+    }
+
+    header('Location: cart.php');
     exit;
 }
