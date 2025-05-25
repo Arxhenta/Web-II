@@ -21,7 +21,7 @@ $total = 0;
                         <p><?php echo $item['name']; ?></p>
                         <small>Cmimi: <?php echo $item['price']; ?>&#8364;</small>
                         <br>
-                        <a href="remove_from_cart.php? id=<?php echo $item['id']; ?>">Largo nga shporta</a> 
+                        <a href="remove_from_cart.php? id=<?php echo $item['id']; ?>">Hiq nga shporta</a> 
                     </div>
                 </div>
             </td>
