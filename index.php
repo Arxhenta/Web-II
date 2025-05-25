@@ -34,7 +34,39 @@
                 </div>
             </div>
         </div>
-
+    </div>
+ 
+    <div class="small-container">
+        <br>
+        <br>
+        <h2 class="title">Produkte të reja</h2>
+        <div class="row">
+            <!--Konektimi me databazen-->
+            <?php
+            require_once 'config.php';
+            $query = "SELECT * FROM products ORDER BY id DESC LIMIT 4";
+            $result = mysqli_query($conn, $query);
+            while($product = mysqli_fetch_assoc($result)) {
+                ?>
+                <div class="col-4">
+                <a href="product_details.php?id=<?php echo $product['id']; ?>">
+                        <img src="<?php echo $product['image']; ?>" alt="<?php echo $product['name']; ?>">
+                        <h4><?php echo $product['name']; ?></h4>
+                        <div class="rating">
+                            <i class="fa fa-star"></i>
+                            <i class="fa fa-star"></i>
+                            <i class="fa fa-star"></i>
+                            <i class="fa fa-star"></i>
+                            <i class="fa fa-star"></i>
+                        </div>
+                        <p><?php echo $product['price']; ?>€</p>
+                    </a>
+                </div>
+                <?php
+            }
+            ?>
+        </div>
+    </div>
     <div class="offer">
         <div class="container">
             <div class="row">
@@ -70,3 +102,4 @@
         </div>
     </div>
 </div></div><?php include 'includes/footer.php'; ?>
+
